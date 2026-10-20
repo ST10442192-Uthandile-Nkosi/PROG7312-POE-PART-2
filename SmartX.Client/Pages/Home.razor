@@ -1,0 +1,25 @@
+﻿@page "/"
+
+<PageTitle>Smart-X</PageTitle>
+
+@* Startup menu: three architectural pillars required by Part 1 *@
+<h1>Smart-X</h1>
+<p class="lede">Select a module to continue.</p>
+
+<div class="pillar-grid">
+    <a class="pillar active" href="ingestion">
+        <h2>Sensor Data Ingestion and Telemetry</h2>
+        <p>Implemented in this part.</p>
+        <span class="pillar-cta">Open</span>
+    </a>
+    <div class="pillar locked" aria-disabled="true">
+        <h2>Real-Time Command Stream and History</h2>
+        <p>Disabled — to be implemented in Part 2.</p>
+        <span class="pillar-cta">Disabled</span>
+    </div>
+    <div class="pillar locked" aria-disabled="true">
+        <h2>Network Topology and Mesh Routing</h2>
+        <p>Disabled — to be implemented in the final PoE.</p>
+        <span class="pillar-cta">Disabled</span>
+    </div>
+</div>

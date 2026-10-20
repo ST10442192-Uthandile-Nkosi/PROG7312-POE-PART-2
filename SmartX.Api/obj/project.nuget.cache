@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "rEfyOIKrGSA=",
+  "success": true,
+  "projectFilePath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/SmartX.Api.csproj",
+  "expectedPackageFiles": [
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.openapi/10.0.12/microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.openapi/2.12.0/microsoft.openapi.2.12.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Access to the path '/Users/Uthandile/.local/share/NuGet/http-cache/670c1461c29885f9aa22c281d8b7da90845b38e4$ps:_api.nuget.org_v3_index.json/vuln_index.dat-new' is denied.",
+      "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/SmartX.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/SmartX.Api.csproj",
+      "targetGraphs": []
+    }
+  ]
+}

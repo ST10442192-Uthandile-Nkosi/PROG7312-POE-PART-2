@@ -1,0 +1,12 @@
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/bin/Debug/net10.0/SmartX.Shared.deps.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/bin/Debug/net10.0/SmartX.Shared.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/bin/Debug/net10.0/SmartX.Shared.pdb
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/SmartX.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/SmartX.Shared.AssemblyInfoInputs.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/SmartX.Shared.AssemblyInfo.cs
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/SmartX.Shared.csproj.CoreCompileInputs.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/SmartX.Shared.sourcelink.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/SmartX.Shared.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/refint/SmartX.Shared.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/SmartX.Shared.pdb
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/Debug/net10.0/ref/SmartX.Shared.dll

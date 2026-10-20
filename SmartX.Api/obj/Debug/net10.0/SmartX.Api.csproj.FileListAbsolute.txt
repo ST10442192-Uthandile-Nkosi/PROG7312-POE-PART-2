@@ -1,0 +1,70 @@
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.AssemblyReference.cache
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/rpswa.dswa.cache.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.AssemblyInfoInputs.cache
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.AssemblyInfo.cs
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.CoreCompileInputs.cache
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.sourcelink.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/appsettings.Development.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/appsettings.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.staticwebassets.endpoints.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.exe
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.deps.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.runtimeconfig.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.dll
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.pdb
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/Microsoft.AspNetCore.OpenApi.dll
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/bin/Debug/net10.0/Microsoft.OpenApi.dll
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/rjimswa.dswa.cache.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/scopedcss/bundle/SmartX.Api.styles.css
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.json.cache
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/staticwebassets.development.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.endpoints.json
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/swae.build.ex.cache
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.Up2Date
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.dll
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/refint/SmartX.Api.dll
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.pdb
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.genruntimeconfig.cache
+C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/SmartX.Api/obj/Debug/net10.0/ref/SmartX.Api.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/appsettings.Development.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/appsettings.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.staticwebassets.endpoints.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.deps.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.runtimeconfig.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Api.pdb
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/Microsoft.AspNetCore.OpenApi.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/Microsoft.OpenApi.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Shared.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/bin/Debug/net10.0/SmartX.Shared.pdb
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.AssemblyReference.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/rpswa.dswa.cache.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.AssemblyInfoInputs.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.AssemblyInfo.cs
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.CoreCompileInputs.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.MvcApplicationPartsAssemblyInfo.cs
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.MvcApplicationPartsAssemblyInfo.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.sourcelink.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/rjimswa.dswa.cache.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/scopedcss/bundle/SmartX.Api.styles.css
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.json.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/staticwebassets.development.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.endpoints.json
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/swae.build.ex.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.Up2Date
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/refint/SmartX.Api.dll
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.pdb
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.genruntimeconfig.cache
+/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/ref/SmartX.Api.dll

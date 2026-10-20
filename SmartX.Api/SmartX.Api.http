@@ -1,0 +1,37 @@
+@SmartX.Api_HostAddress = http://localhost:5057
+
+GET {{SmartX.Api_HostAddress}}/
+Accept: application/json
+
+###
+
+GET {{SmartX.Api_HostAddress}}/api/sensors
+Accept: application/json
+
+###
+
+POST {{SmartX.Api_HostAddress}}/api/telemetry/ingest
+Content-Type: application/json
+
+{
+  "deviceId": "24:6F:28:A1:B2:C3",
+  "valueKind": "float",
+  "numericValue": 18.5,
+  "metricName": "soil_moisture",
+  "unit": "%VWC"
+}
+
+###
+
+POST {{SmartX.Api_HostAddress}}/api/deployment/validate
+Content-Type: application/json
+
+{
+  "targetPath": "Facility A -> Zone 1 -> Sub-Zone B",
+  "sensorCategory": "Environmental"
+}
+
+###
+
+GET {{SmartX.Api_HostAddress}}/api/gateway/integrity
+Accept: application/json

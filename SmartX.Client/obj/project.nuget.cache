@@ -1,0 +1,52 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZaVf2r9or1w=",
+  "success": true,
+  "projectFilePath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Client/SmartX.Client.csproj",
+  "expectedPackageFiles": [
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.app.internal.assets/10.0.5/microsoft.aspnetcore.app.internal.assets.10.0.5.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.authorization/10.0.12/microsoft.aspnetcore.authorization.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.components/10.0.12/microsoft.aspnetcore.components.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.components.analyzers/10.0.12/microsoft.aspnetcore.components.analyzers.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.components.forms/10.0.12/microsoft.aspnetcore.components.forms.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.components.web/10.0.12/microsoft.aspnetcore.components.web.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.components.webassembly/10.0.12/microsoft.aspnetcore.components.webassembly.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.components.webassembly.devserver/10.0.12/microsoft.aspnetcore.components.webassembly.devserver.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.aspnetcore.metadata/10.0.12/microsoft.aspnetcore.metadata.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.dotnet.hotreload.webassembly.browser/10.0.201/microsoft.dotnet.hotreload.webassembly.browser.10.0.201.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.configuration/10.0.12/microsoft.extensions.configuration.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.configuration.abstractions/10.0.12/microsoft.extensions.configuration.abstractions.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.configuration.binder/10.0.12/microsoft.extensions.configuration.binder.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.configuration.fileextensions/10.0.12/microsoft.extensions.configuration.fileextensions.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.configuration.json/10.0.12/microsoft.extensions.configuration.json.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.dependencyinjection/10.0.12/microsoft.extensions.dependencyinjection.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.dependencyinjection.abstractions/10.0.12/microsoft.extensions.dependencyinjection.abstractions.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.diagnostics/10.0.12/microsoft.extensions.diagnostics.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.diagnostics.abstractions/10.0.12/microsoft.extensions.diagnostics.abstractions.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.fileproviders.abstractions/10.0.12/microsoft.extensions.fileproviders.abstractions.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.fileproviders.physical/10.0.12/microsoft.extensions.fileproviders.physical.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.filesystemglobbing/10.0.12/microsoft.extensions.filesystemglobbing.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.logging/10.0.12/microsoft.extensions.logging.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.logging.abstractions/10.0.12/microsoft.extensions.logging.abstractions.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.options/10.0.12/microsoft.extensions.options.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.options.configurationextensions/10.0.12/microsoft.extensions.options.configurationextensions.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.primitives/10.0.12/microsoft.extensions.primitives.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.extensions.validation/10.0.12/microsoft.extensions.validation.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.jsinterop/10.0.12/microsoft.jsinterop.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.jsinterop.webassembly/10.0.12/microsoft.jsinterop.webassembly.10.0.12.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.net.illink.tasks/10.0.5/microsoft.net.illink.tasks.10.0.5.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.net.sdk.webassembly.pack/10.0.5/microsoft.net.sdk.webassembly.pack.10.0.5.nupkg.sha512",
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget/microsoft.netcore.app.runtime.mono.browser-wasm/10.0.5/microsoft.netcore.app.runtime.mono.browser-wasm.10.0.5.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Access to the path '/Users/Uthandile/.local/share/NuGet/http-cache/670c1461c29885f9aa22c281d8b7da90845b38e4$ps:_api.nuget.org_v3_index.json/vuln_index.dat-new' is denied.",
+      "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Client/SmartX.Client.csproj",
+      "warningLevel": 1,
+      "filePath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Client/SmartX.Client.csproj",
+      "targetGraphs": []
+    }
+  ]
+}

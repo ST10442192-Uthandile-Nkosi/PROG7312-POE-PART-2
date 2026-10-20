@@ -1,0 +1,220 @@
+@page "/ingestion"
+@inject HttpClient Http
+
+@* Telemetry ingest dashboard — talks to /api/telemetry *@
+<PageTitle>Telemetry</PageTitle>
+
+<h1>Telemetry</h1>
+<PartLinks />
+<p class="lede">Send a packet, then watch node health on the mesh map.</p>
+
+@if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+
+<div class="row g-3">
+    <div class="col-lg-5">
+        <div class="card mesh-card">
+            <div class="card-header">Send packet</div>
+            <div class="card-body">
+                <label class="form-label">Sensor</label>
+                <select class="form-select mb-2" @bind="selectedMac">
+                    @foreach (var sensor in sensors)
+                    {
+                        <option value="@sensor.MacAddress">@sensor.DisplayName</option>
+                    }
+                </select>
+
+                <label class="form-label">Type</label>
+                <select class="form-select mb-2" @bind="valueKind">
+                    <option value="float">Moisture (%VWC)</option>
+                    <option value="int">Power (W)</option>
+                    <option value="bool">Valve</option>
+                </select>
+
+                @if (valueKind != "bool")
+                {
+                    <label class="form-label">Value</label>
+                    <input class="form-control mb-2" type="number" step="0.1" @bind="numericValue" />
+                }
+                else
+                {
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" @bind="booleanValue" id="valve" />
+                        <label class="form-check-label" for="valve">Valve open</label>
+                    </div>
+                }
+
+                <button class="btn btn-primary" @onclick="SendTelemetry" disabled="@busy">Send</button>
+                <p class="mt-2 mb-0 @(statusIsError ? "text-danger" : "status-line")">@status</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card mesh-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Mesh health</span>
+                @if (report is not null)
+                {
+                    <span class="steward-seal @SealClass">@report.StewardRank</span>
+                }
+            </div>
+            <div class="card-body">
+                @if (report is not null)
+                {
+                    <p class="narrative">@report.Narrative</p>
+                    <svg viewBox="0 0 240 240" class="constellation" role="img" aria-label="Mesh health">
+                        <circle cx="120" cy="120" r="38" class="orbit" />
+                        <circle cx="120" cy="120" r="58" class="orbit" />
+                        <circle cx="120" cy="120" r="78" class="orbit" />
+                        <circle cx="120" cy="120" r="7" class="gateway-core" />
+                        <text x="120" y="108" text-anchor="middle" class="gw-label">GW</text>
+                        @foreach (var node in report.Nodes)
+                        {
+                            <g>
+                                <circle cx="@node.X.ToString("0.0")" cy="@node.Y.ToString("0.0")" r="6"
+                                        class="mesh-node @node.Status @node.Category">
+                                    <title>@node.DisplayName · @node.LatestValue</title>
+                                </circle>
+                                @if (node.Status == "fracture")
+                                {
+                                    <line x1="120" y1="120" x2="@node.X.ToString("0.0")" y2="@node.Y.ToString("0.0")" class="fracture-line" />
+                                }
+                            </g>
+                        }
+                    </svg>
+                    <p class="tiny">@report.TotalPackets packets · @report.FractureCount alerts</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (report?.Alarms.Count > 0)
+{
+    <div class="alarm-stack mt-4">
+        @foreach (var alarm in report.Alarms)
+        {
+            <article class="alarm">
+                <strong>@alarm.Title</strong>
+                <p class="mb-0">@alarm.Detail</p>
+            </article>
+        }
+    </div>
+}
+
+<h2 class="mt-4">Latest packets</h2>
+<div class="table-responsive">
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Device</th>
+                <th>Type</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in recent)
+            {
+                <tr>
+                    <td>@row.Timestamp.ToString("HH:mm:ss")</td>
+                    <td>@row.DeviceId</td>
+                    <td>@row.ValueKind</td>
+                    <td>@row.DisplayValue @row.Unit</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private List<SensorProfile> sensors = [];
+    private List<TelemetrySnapshot> recent = [];
+    private GatewayIntegrityReport? report;
+    private string selectedMac = "";
+    private string valueKind = "float";
+    private double numericValue = 42;
+    private bool booleanValue = true;
+    private string status = "";
+    private bool statusIsError;
+    private string error = "";
+    private bool busy;
+    private string SealClass => report?.StewardRank == "Stable" ? "gold" : report?.StewardRank == "Watch" ? "silver" : "bronze";
+
+    protected override async Task OnInitializedAsync() => await Refresh();
+
+    private async Task Refresh()
+    {
+        try
+        {
+            sensors = await Http.GetFromJsonAsync<List<SensorProfile>>("/api/sensors") ?? [];
+            if (string.IsNullOrEmpty(selectedMac) && sensors.Count > 0)
+            {
+                selectedMac = sensors[0].MacAddress;
+            }
+            recent = await Http.GetFromJsonAsync<List<TelemetrySnapshot>>("/api/telemetry/recent?take=12") ?? [];
+            report = await Http.GetFromJsonAsync<GatewayIntegrityReport>("/api/gateway/integrity");
+            error = "";
+        }
+        catch
+        {
+            error = "Cannot reach the API. Start SmartX.Api on port 5057.";
+        }
+    }
+
+    private async Task SendTelemetry()
+    {
+        // Client-side checks before the API call.
+        if (string.IsNullOrWhiteSpace(selectedMac))
+        {
+            status = "Choose a sensor.";
+            statusIsError = true;
+            return;
+        }
+
+        if (valueKind == "float" && (numericValue < 0 || numericValue > 100))
+        {
+            status = "Moisture must be 0–100.";
+            statusIsError = true;
+            return;
+        }
+
+        if (valueKind == "int" && (numericValue < 0 || numericValue > 20000))
+        {
+            status = "Power must be 0–20000 W.";
+            statusIsError = true;
+            return;
+        }
+
+        busy = true;
+        statusIsError = false;
+        try
+        {
+            var request = new TelemetryIngestRequest
+            {
+                DeviceId = selectedMac,
+                ValueKind = valueKind,
+                NumericValue = numericValue,
+                BooleanValue = booleanValue
+            };
+            var response = await Http.PostAsJsonAsync("/api/telemetry/ingest", request);
+            if (response.IsSuccessStatusCode)
+            {
+                status = "Packet stored.";
+                await Refresh();
+            }
+            else
+            {
+                status = await response.Content.ReadAsStringAsync();
+                statusIsError = true;
+            }
+        }
+        finally
+        {
+            busy = false;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+services:
+  smartx-api:
+    build:
+      context: .
+      dockerfile: SmartX.Api/Dockerfile
+    ports:
+      - "5057:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+
+  smartx-client:
+    build:
+      context: .
+      dockerfile: SmartX.Client/Dockerfile
+    ports:
+      - "5197:80"
+    depends_on:
+      - smartx-api

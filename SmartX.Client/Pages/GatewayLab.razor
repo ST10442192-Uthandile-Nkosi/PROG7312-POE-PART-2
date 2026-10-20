@@ -1,0 +1,110 @@
+@page "/tools"
+@page "/gateway-lab"
+@inject HttpClient Http
+
+@* Operator overloading, recursion, and jagged-array batches *@
+<PageTitle>Tools</PageTitle>
+
+<h1>Meters and batches</h1>
+<PartLinks />
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card mesh-card">
+            <div class="card-header">Combine meters</div>
+            <div class="card-body">
+                <p class="tiny">Uses <code>Meter3 = Meter1 + Meter2</code>.</p>
+                <label>Meter 1 (W)</label>
+                <input type="number" class="form-control mb-2" @bind="meter1" />
+                <label>Meter 2 (W)</label>
+                <input type="number" class="form-control mb-2" @bind="meter2" />
+                <label>Limit (W)</label>
+                <input type="number" class="form-control mb-2" @bind="limit" />
+                <button class="btn btn-primary" @onclick="CalculateAggregate">Add</button>
+                @if (aggregate is not null)
+                {
+                    <p class="mt-2 mb-0">
+                        Total <strong>@aggregate.AggregatedWatts</strong> W.
+                        @(aggregate.ExceedsTransformer ? "Over limit." : "Within limit.")
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mesh-card">
+            <div class="card-header">Check location</div>
+            <div class="card-body">
+                <input class="form-control mb-2" @bind="targetPath" />
+                <select class="form-select mb-2" @bind="validateCategory">
+                    <option value="">Any</option>
+                    <option value="Environmental">Environmental</option>
+                    <option value="PowerConsumption">Power</option>
+                    <option value="Actuator">Actuator</option>
+                </select>
+                <button class="btn btn-warning" @onclick="ValidatePath">Validate</button>
+                @if (validation is not null)
+                {
+                    <p class="mt-2 mb-1">@(validation.IsValid ? "Valid" : "Invalid") — @validation.Reason</p>
+                    <pre class="trace">@string.Join("\n", validation.WalkTrace)</pre>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mesh-card mt-3">
+    <div class="card-header">Batch history</div>
+    <div class="card-body">
+        <button class="btn btn-info text-white me-2" @onclick="AddBatch">Add batch</button>
+        <button class="btn btn-secondary" @onclick="GetHistory">Show history</button>
+        <p class="mt-2">@history?.BurstWindowsStored windows · @history?.Count samples</p>
+        <p class="tiny">@historyPreview</p>
+    </div>
+</div>
+
+@code {
+    private double meter1 = 1500;
+    private double meter2 = 2200;
+    private double limit = 3500;
+    private MetricAggregateResponse? aggregate;
+    private string targetPath = "Facility A -> Zone 1 -> Sub-Zone B";
+    private string validateCategory = "";
+    private ValidationResponse? validation;
+    private HistoryResponse? history;
+    private string historyPreview = "";
+
+    private async Task CalculateAggregate()
+    {
+        var request = new MetricAggregateRequest
+        {
+            Metric1 = new PowerMetric { Watts = meter1, MeterId = "Bay-1" },
+            Metric2 = new PowerMetric { Watts = meter2, MeterId = "Bay-2" },
+            TransformerLimitWatts = limit
+        };
+        var response = await Http.PostAsJsonAsync("/api/metrics/aggregate", request);
+        aggregate = await response.Content.ReadFromJsonAsync<MetricAggregateResponse>();
+    }
+
+    private async Task ValidatePath()
+    {
+        var request = new ValidationRequest { TargetPath = targetPath, SensorCategory = string.IsNullOrWhiteSpace(validateCategory) ? null : validateCategory };
+        var response = await Http.PostAsJsonAsync("/api/deployment/validate", request);
+        validation = await response.Content.ReadFromJsonAsync<ValidationResponse>();
+    }
+
+    private async Task AddBatch()
+    {
+        var rng = new Random();
+        var length = rng.Next(5, 14);
+        var mockBatch = Enumerable.Range(0, length).Select(_ => Math.Round(15 + rng.NextDouble() * 70, 2)).ToArray();
+        await Http.PostAsJsonAsync("/api/telemetry/batch?facility=0", mockBatch);
+        await GetHistory();
+    }
+
+    private async Task GetHistory()
+    {
+        history = await Http.GetFromJsonAsync<HistoryResponse>("/api/telemetry/history");
+        historyPreview = history is null ? "" : string.Join(", ", history.Data.Take(24).Select(v => v.ToString("0.0")));
+    }
+}

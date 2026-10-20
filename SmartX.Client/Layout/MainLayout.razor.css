@@ -1,0 +1,54 @@
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    height: 3.75rem;
+    padding: 0 1.5rem;
+    background: linear-gradient(90deg, #071226 0%, #3a0647 100%);
+}
+
+/* Solid Home button so it is obvious this returns to the landing page */
+.home-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    background: #fff;
+    color: #3a0647;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.home-button:hover {
+    background: #f4e27c;
+    text-decoration: none;
+}
+
+.home-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+
+.brand-label {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    padding-top: 1.25rem;
+    padding-bottom: 2rem;
+}
+
+@media (max-width: 640.98px) {
+    .top-bar {
+        padding: 0 1rem;
+    }
+}
