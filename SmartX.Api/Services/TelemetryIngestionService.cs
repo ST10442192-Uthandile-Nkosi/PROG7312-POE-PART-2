@@ -1,4 +1,6 @@
+using System.Globalization;
 using SmartX.Shared.Collections;
+using SmartX.Shared.Runtime;
 using SmartX.Shared.Sensors;
 using SmartX.Shared.Telemetry;
 
@@ -11,9 +13,28 @@ public sealed class TelemetryIngestionService
     private readonly IngestionBuffer<TelemetryPacket<bool>> _bools = new(4096);
     private readonly Dictionary<string, TelemetrySnapshot> _latest = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _latestGate = new();
+    private readonly PendingTelemetryQueue _pending;
+    private readonly AlertPriorityInbox _alerts;
+    private readonly ThresholdEvaluator _thresholds;
+    private readonly SensorRegistry _registry;
+    private readonly ActiveFaultSet _faults;
     private int _validStreak;
     private int _totalPackets;
     private int _fractures;
+
+    public TelemetryIngestionService(
+        PendingTelemetryQueue pending,
+        AlertPriorityInbox alerts,
+        ThresholdEvaluator thresholds,
+        SensorRegistry registry,
+        ActiveFaultSet faults)
+    {
+        _pending = pending;
+        _alerts = alerts;
+        _thresholds = thresholds;
+        _registry = registry;
+        _faults = faults;
+    }
 
     public int ValidPacketStreak => _validStreak;
     public int TotalPackets => _totalPackets;
@@ -21,22 +42,45 @@ public sealed class TelemetryIngestionService
 
     public TelemetryPacket<float> IngestFloat(TelemetryPacket<float> packet)
     {
+        OfferToPipeline(ToItem(packet, "float", packet.Value, null));
         _floats.Add(packet);
-        Record(packet.DeviceId, packet.Timestamp, "float", packet.Value.ToString("0.00"), packet.MetricName, packet.Unit);
+        Record(packet.DeviceId, packet.Timestamp, "float", packet.Value.ToString("0.00", CultureInfo.InvariantCulture), packet.MetricName, packet.Unit);
         EvaluateRange(packet.Value is >= 0 and <= 100);
         return packet;
     }
 
     public TelemetryPacket<int> IngestInt(TelemetryPacket<int> packet)
     {
+        OfferToPipeline(ToItem(packet, "int", packet.Value, null));
         _ints.Add(packet);
         Record(packet.DeviceId, packet.Timestamp, "int", packet.Value.ToString(), packet.MetricName, packet.Unit);
         EvaluateRange(packet.Value is >= 0 and <= 20000);
         return packet;
     }
 
-    public TelemetryPacket<bool> IngestBool(TelemetryPacket<bool> packet)
+    public TelemetryPacket<bool> IngestBool(TelemetryPacket<bool> packet) =>
+        IngestBool(packet, offerToPipeline: true);
+
+    public TelemetryPacket<bool> ApplyActuatorState(string mac, bool on, DateTimeOffset timestampUtc)
     {
+        var packet = new TelemetryPacket<bool>
+        {
+            DeviceId = mac,
+            Timestamp = timestampUtc.ToUniversalTime(),
+            Value = on,
+            MetricName = "actuator_state",
+            Unit = "state"
+        };
+        return IngestBool(packet, offerToPipeline: false);
+    }
+
+    private TelemetryPacket<bool> IngestBool(TelemetryPacket<bool> packet, bool offerToPipeline)
+    {
+        if (offerToPipeline)
+        {
+            OfferToPipeline(ToItem(packet, "bool", null, packet.Value));
+        }
+
         _bools.Add(packet);
         Record(packet.DeviceId, packet.Timestamp, "bool", packet.Value ? "ON" : "OFF", packet.MetricName, packet.Unit);
         EvaluateRange(true);
@@ -46,7 +90,7 @@ public sealed class TelemetryIngestionService
     public IReadOnlyList<TelemetrySnapshot> Recent(int take = 40)
     {
         var combined = new List<TelemetrySnapshot>();
-        combined.AddRange(_floats.Select(p => ToSnapshot(p.DeviceId, p.Timestamp, "float", p.Value.ToString("0.00"), p.MetricName, p.Unit)));
+        combined.AddRange(_floats.Select(p => ToSnapshot(p.DeviceId, p.Timestamp, "float", p.Value.ToString("0.00", CultureInfo.InvariantCulture), p.MetricName, p.Unit)));
         combined.AddRange(_ints.Select(p => ToSnapshot(p.DeviceId, p.Timestamp, "int", p.Value.ToString(), p.MetricName, p.Unit)));
         combined.AddRange(_bools.Select(p => ToSnapshot(p.DeviceId, p.Timestamp, "bool", p.Value ? "ON" : "OFF", p.MetricName, p.Unit)));
         return combined.OrderByDescending(s => s.Timestamp).Take(take).ToList();
@@ -147,6 +191,42 @@ public sealed class TelemetryIngestionService
             MetricName = metric,
             Unit = unit
         };
+
+    private void OfferToPipeline(TelemetryWorkItem item)
+    {
+        if (!_pending.TryEnqueue(item, out _))
+        {
+            throw new QueueFullException();
+        }
+
+        var category = item.KnownCategory ?? _registry.Get(item.DeviceId)?.Category;
+        foreach (var alert in _thresholds.EvaluatePacket(item, category))
+        {
+            if (!_faults.Contains(alert.Code, alert.DeviceId))
+            {
+                _alerts.Enqueue(alert);
+            }
+        }
+
+        _pending.Pulse();
+    }
+
+    private TelemetryWorkItem ToItem<T>(TelemetryPacket<T> packet, string kind, double? numeric, bool? boolean)
+        where T : struct
+    {
+        var category = _registry.Get(packet.DeviceId)?.Category;
+        return new TelemetryWorkItem
+        {
+            DeviceId = packet.DeviceId,
+            TimestampUtc = packet.Timestamp.ToUniversalTime(),
+            ValueKind = kind,
+            NumericValue = numeric,
+            BooleanValue = boolean,
+            MetricName = packet.MetricName,
+            Unit = packet.Unit,
+            KnownCategory = category
+        };
+    }
 
     private static bool SharesZone(string left, string right)
     {

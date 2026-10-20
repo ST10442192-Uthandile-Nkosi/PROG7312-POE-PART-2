@@ -1,0 +1,629 @@
+@page "/command-stream"
+@inject CommandStreamClient Api
+@implements IAsyncDisposable
+
+<PageTitle>Command stream</PageTitle>
+
+<h1>Command stream</h1>
+<p class="lede">
+    Live devices, simulated actuator overrides, and processed history.
+    Commands change gateway state only — there is no physical pump or relay attached.
+</p>
+<p class="section-links">
+    <a href="command-stream">Stream</a>
+    <span>·</span>
+    <a href="ingestion">Ingest</a>
+</p>
+
+@if (!string.IsNullOrEmpty(staleWarning))
+{
+    <div class="stale-banner">@staleWarning</div>
+}
+
+@if (!string.IsNullOrEmpty(loadError) && stats is null)
+{
+    <div class="alert alert-danger">@loadError</div>
+}
+
+<div class="stat-grid">
+    <article class="stat-tile mesh-card">
+        <span class="tiny">FIFO pending</span>
+        <strong>@(stats?.PendingCount ?? 0) / @(stats?.QueueCapacity ?? 0)</strong>
+    </article>
+    <article class="stat-tile mesh-card">
+        <span class="tiny">Processed</span>
+        <strong>@(stats?.ProcessedCount ?? 0)</strong>
+    </article>
+    <article class="stat-tile mesh-card">
+        <span class="tiny">Rejected / errors</span>
+        <strong>@(stats?.RejectedCount ?? 0) / @(stats?.ProcessingErrors ?? 0)</strong>
+    </article>
+    <article class="stat-tile mesh-card">
+        <span class="tiny">Dead-lettered</span>
+        <strong>@(stats?.DeadLetteredCount ?? 0)</strong>
+    </article>
+    <article class="stat-tile mesh-card">
+        <span class="tiny">Active faults</span>
+        <strong>@(stats?.ActiveFaults ?? 0)</strong>
+    </article>
+    <article class="stat-tile mesh-card">
+        <span class="tiny">Devices</span>
+        <strong>@devices.Count</strong>
+    </article>
+</div>
+<p class="tiny mb-3">Refreshing every 2s while this page is open. Last success: @lastSuccessLabel</p>
+
+<div class="card mesh-card mb-3">
+    <div class="card-header">Suggested Actions</div>
+    <div class="card-body">
+        <p class="tiny">Derived from live state, faults, processed history and command audit. Insights never send a command.</p>
+        @if (recommendationsError)
+        {
+            <p class="text-danger mb-0">Recommendations could not be refreshed. Other dashboard data may still be current.</p>
+        }
+        else if (recommendations.Count == 0)
+        {
+            <p class="mb-0 tiny">No recommendations. History is empty, readings are in-band, or evidence is stale (&gt; 6 hours).</p>
+        }
+        else
+        {
+            <div class="insight-stack">
+                @foreach (var rec in recommendations)
+                {
+                    <article class="insight @rec.Severity">
+                        <div class="d-flex justify-content-between gap-2 flex-wrap">
+                            <strong>@rec.Title</strong>
+                            <span class="tiny">@rec.Severity · @rec.Category</span>
+                        </div>
+                        <p class="mb-1">@rec.Explanation</p>
+                        <p class="tiny mb-1">Device @rec.DeviceId @if (rec.RelatedDeviceId is not null) { <span>· related @rec.RelatedDeviceId</span> }</p>
+                        <p class="tiny mb-1">@rec.Evidence</p>
+                        <p class="mb-1"><em>Next step:</em> @rec.SuggestedAction</p>
+                        <p class="tiny mb-0">Evidence @rec.EvidenceUtc.UtcDateTime.ToString("u") · @rec.EvidenceCount sample(s)</p>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card mesh-card mb-3">
+    <div class="card-header">Search and filters</div>
+    <div class="card-body">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Name or MAC</label>
+                <input class="form-control" @bind="search" @bind:event="oninput" placeholder="solenoid or 24:6F" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Category</label>
+                <select class="form-select" @bind="categoryFilter">
+                    <option value="">All</option>
+                    <option value="Environmental">Environmental</option>
+                    <option value="PowerConsumption">Power</option>
+                    <option value="Actuator">Actuator</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Status</label>
+                <select class="form-select" @bind="statusFilter">
+                    <option value="">All</option>
+                    <option value="seen">Seen</option>
+                    <option value="unseen">Not yet seen</option>
+                    <option value="alerting">Active alert</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Actuator</label>
+                <select class="form-select" @bind="actuatorFilter">
+                    <option value="">All</option>
+                    <option value="on">ON</option>
+                    <option value="off">OFF</option>
+                    <option value="none">Not an actuator</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-outline-secondary w-100" @onclick="ClearFilters">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card mesh-card">
+            <div class="card-header">Live devices</div>
+            <div class="card-body p-0">
+                @if (filtered.Count == 0)
+                {
+                    <p class="p-3 mb-0 tiny">No devices match the current filters.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Device</th>
+                                    <th>Category</th>
+                                    <th>Last seen (UTC)</th>
+                                    <th>Reading</th>
+                                    <th>Actuator</th>
+                                    <th>Alert</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var device in filtered)
+                                {
+                                    <tr class="@(device.HasActiveAlert ? "row-alert" : null)">
+                                        <td>
+                                            <div>@device.DisplayName</div>
+                                            <div class="tiny">@device.MacAddress</div>
+                                        </td>
+                                        <td>@device.Category</td>
+                                        <td>@(device.LastSeenUtc?.UtcDateTime.ToString("u") ?? "—")</td>
+                                        <td>@(device.LatestDisplay ?? "—") @device.Unit</td>
+                                        <td>
+                                            @if (device.Category == SensorCategory.Actuator)
+                                            {
+                                                <div>Effective: @OnOff(device.ActuatorOn)</div>
+                                                <div class="tiny">Commanded @OnOff(device.CommandedActuatorOn) · Reported @OnOff(device.ReportedActuatorOn)</div>
+                                            }
+                                            else
+                                            {
+                                                <span class="tiny">n/a</span>
+                                            }
+                                        </td>
+                                        <td>@(device.HasActiveAlert ? "Yes" : "No")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card mesh-card mb-3">
+            <div class="card-header">Simulated actuator command</div>
+            <div class="card-body">
+                @if (actuators.Count == 0)
+                {
+                    <p class="tiny mb-0">No registered actuators. Register a node with category Actuator first.</p>
+                }
+                else
+                {
+                    <label class="form-label">Target</label>
+                    <select class="form-select mb-2" @bind="selectedActuatorMac" disabled="@commandBusy">
+                        @foreach (var actuator in actuators)
+                        {
+                            <option value="@actuator.MacAddress">@actuator.DisplayName (@actuator.MacAddress)</option>
+                        }
+                    </select>
+                    <p class="tiny">Action: set <strong>@selectedActuatorName</strong> to <strong>@(commandOn ? "ON" : "OFF")</strong>.</p>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="cmdOn" @bind="commandOn" disabled="@commandBusy" />
+                        <label class="form-check-label" for="cmdOn">Turn ON</label>
+                    </div>
+                    <button class="btn btn-primary" @onclick="SendCommand" disabled="@commandBusy">Apply command</button>
+                    <p class="mt-2 mb-0 @(commandFailed ? "text-danger" : "status-line")">@commandFeedback</p>
+                }
+            </div>
+        </div>
+
+        <div class="card mesh-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Command history</span>
+                <button class="btn btn-sm btn-outline-primary" @onclick="UndoLast" disabled="@commandBusy">Undo last</button>
+            </div>
+            <div class="card-body p-0">
+                @if (commands.Count == 0)
+                {
+                    <p class="p-3 mb-0 tiny">No commands yet. Undo is rejected by the API until a command is accepted.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Time (UTC)</th>
+                                    <th>Device</th>
+                                    <th>Change</th>
+                                    <th>Kind</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in commands.AsEnumerable().Reverse())
+                                {
+                                    <tr>
+                                        <td>@row.AppliedAtUtc.UtcDateTime.ToString("HH:mm:ss")</td>
+                                        <td>@row.MacAddress</td>
+                                        <td>@OnOff(row.PreviousActuatorOn) → @OnOff(row.ResultingActuatorOn)</td>
+                                        <td>@(row.IsUndo ? "Undo" : "Command")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-lg-7">
+        <div class="card mesh-card">
+            <div class="card-header">Processed telemetry history</div>
+            <div class="card-body">
+                <div class="row g-2 mb-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Device</label>
+                        <select class="form-select" @bind="historyMac" @bind:after="OnHistoryMacChanged">
+                            <option value="">All devices</option>
+                            @foreach (var device in devices)
+                            {
+                                <option value="@device.MacAddress">@device.DisplayName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Show from</label>
+                        <select class="form-select" @bind="historyHours">
+                            <option value="0">All loaded</option>
+                            <option value="1">Last 1 hour</option>
+                            <option value="6">Last 6 hours</option>
+                            <option value="24">Last 24 hours</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="tiny">From <code>/api/runtime/history</code>, oldest first. Not the Part 1 jagged batch list.</p>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Time (UTC)</th>
+                                <th>Device</th>
+                                <th>Metric</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in visibleHistory)
+                            {
+                                <tr>
+                                    <td>@row.TimestampUtc.UtcDateTime.ToString("u")</td>
+                                    <td>@row.DeviceId</td>
+                                    <td>@row.MetricName</td>
+                                    <td>@row.DisplayValue @row.Unit</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @if (visibleHistory.Count == 0)
+                {
+                    <p class="tiny mb-0">No processed readings in this window.</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card mesh-card mb-3">
+            <div class="card-header">Active faults</div>
+            <div class="card-body p-0">
+                @if (faults.Count == 0)
+                {
+                    <p class="p-3 mb-0 tiny">No unique active faults. Repeats of the same CODE:MAC are not listed twice.</p>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var fault in faults)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <code>@fault</code>
+                                <button class="btn btn-sm btn-outline-secondary" disabled="@commandBusy"
+                                        @onclick="() => ResolveFault(fault)">Resolve</button>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+        <div class="card mesh-card">
+            <div class="card-header">Processing journal</div>
+            <div class="card-body p-0">
+                <p class="tiny px-3 pt-2 mb-0">Backend worker order (ALERT before TELEMETRY). This UI does not process the priority queue.</p>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Kind</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var entry in journal.AsEnumerable().Reverse().Take(20))
+                            {
+                                <tr>
+                                    <td>@entry.AtUtc.UtcDateTime.ToString("HH:mm:ss")</td>
+                                    <td>@entry.Kind</td>
+                                    <td class="tiny">@entry.Detail</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ProcessingStatsDto? stats;
+    private IReadOnlyList<LiveDeviceState> devices = [];
+    private IReadOnlyList<CommandRecord> commands = [];
+    private IReadOnlyList<ProcessedReading> history = [];
+    private IReadOnlyList<string> faults = [];
+    private IReadOnlyList<ProcessingJournalEntry> journal = [];
+    private IReadOnlyList<RecommendationDto> recommendations = [];
+    private bool recommendationsError;
+    private string search = "";
+    private string categoryFilter = "";
+    private string statusFilter = "";
+    private string actuatorFilter = "";
+    private string selectedActuatorMac = "";
+    private bool commandOn = true;
+    private bool commandBusy;
+    private bool commandFailed;
+    private string commandFeedback = "";
+    private string loadError = "";
+    private string staleWarning = "";
+    private string lastSuccessLabel = "never";
+    private string historyMac = "";
+    private string historyHours = "0";
+    private CancellationTokenSource? pollCts;
+    private bool refreshInFlight;
+    private Task? pollTask;
+
+    private IReadOnlyList<LiveDeviceState> filtered => DeviceDashboardFilter.Apply(
+        devices,
+        search,
+        ParseCategory(categoryFilter),
+        statusFilter,
+        actuatorFilter);
+
+    private IReadOnlyList<LiveDeviceState> actuators =>
+        devices.Where(d => d.Category == SensorCategory.Actuator).ToList();
+
+    private string selectedActuatorName =>
+        actuators.FirstOrDefault(a => a.MacAddress == selectedActuatorMac)?.DisplayName ?? selectedActuatorMac;
+
+    private IReadOnlyList<ProcessedReading> visibleHistory
+    {
+        get
+        {
+            IEnumerable<ProcessedReading> rows = history;
+            if (int.TryParse(historyHours, out var hours) && hours > 0)
+            {
+                var from = DateTimeOffset.UtcNow.AddHours(-hours);
+                rows = rows.Where(r => r.TimestampUtc >= from);
+            }
+
+            return rows.OrderBy(r => r.TimestampUtc).ToList();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshAsync(silent: false);
+        pollCts = new CancellationTokenSource();
+        pollTask = PollAsync(pollCts.Token);
+    }
+
+    private async Task PollAsync(CancellationToken token)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
+        try
+        {
+            while (await timer.WaitForNextTickAsync(token))
+            {
+                if (refreshInFlight)
+                {
+                    continue;
+                }
+
+                await RefreshAsync(silent: true);
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    private async Task RefreshAsync(bool silent)
+    {
+        if (refreshInFlight)
+        {
+            return;
+        }
+
+        refreshInFlight = true;
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+            stats = await Api.GetStatsAsync(timeout.Token);
+            devices = await Api.GetDevicesAsync(timeout.Token);
+            commands = await Api.GetCommandsAsync(timeout.Token);
+            faults = await Api.GetFaultsAsync(timeout.Token);
+            journal = await Api.GetJournalAsync(timeout.Token);
+            history = await Api.GetHistoryAsync(string.IsNullOrWhiteSpace(historyMac) ? null : historyMac, 80, timeout.Token);
+            try
+            {
+                recommendations = await Api.GetRecommendationsAsync(timeout.Token);
+                recommendationsError = false;
+            }
+            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException)
+            {
+                recommendationsError = true;
+            }
+
+            if (string.IsNullOrEmpty(selectedActuatorMac) && actuators.Count > 0)
+            {
+                selectedActuatorMac = actuators[0].MacAddress;
+            }
+
+            loadError = "";
+            staleWarning = "";
+            lastSuccessLabel = DateTimeOffset.UtcNow.ToString("HH:mm:ss") + " UTC";
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException)
+        {
+            var message = "Cannot reach the command-stream API. Start SmartX.Api on port 5057.";
+            if (silent && stats is not null)
+            {
+                staleWarning = "Showing last successful snapshot. " + message;
+            }
+            else
+            {
+                loadError = message;
+            }
+        }
+        finally
+        {
+            refreshInFlight = false;
+        }
+    }
+
+    private async Task OnHistoryMacChanged() => await RefreshAsync(silent: true);
+
+    private void ClearFilters()
+    {
+        search = "";
+        categoryFilter = "";
+        statusFilter = "";
+        actuatorFilter = "";
+    }
+
+    private async Task SendCommand()
+    {
+        if (string.IsNullOrWhiteSpace(selectedActuatorMac) || commandBusy)
+        {
+            return;
+        }
+
+        commandBusy = true;
+        commandFailed = false;
+        commandFeedback = "Sending…";
+        try
+        {
+            var result = await Api.SendCommandAsync(new CommandRequest
+            {
+                MacAddress = selectedActuatorMac,
+                ActuatorOn = commandOn,
+                Note = "operator-ui"
+            }, CancellationToken.None);
+            commandFailed = !result.Accepted;
+            commandFeedback = result.Outcome;
+            if (result.Accepted)
+            {
+                await RefreshAsync(silent: false);
+            }
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            commandFailed = true;
+            commandFeedback = "Command request failed. The API did not confirm a state change.";
+        }
+        finally
+        {
+            commandBusy = false;
+        }
+    }
+
+    private async Task UndoLast()
+    {
+        if (commandBusy)
+        {
+            return;
+        }
+
+        commandBusy = true;
+        commandFailed = false;
+        commandFeedback = "Undoing…";
+        try
+        {
+            var result = await Api.UndoAsync(CancellationToken.None);
+            commandFailed = !result.Accepted;
+            commandFeedback = result.Outcome;
+            await RefreshAsync(silent: false);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            commandFailed = true;
+            commandFeedback = "Undo request failed.";
+        }
+        finally
+        {
+            commandBusy = false;
+        }
+    }
+
+    private async Task ResolveFault(string faultKey)
+    {
+        if (!DeviceDashboardFilter.TrySplitFaultKey(faultKey, out var code, out var mac))
+        {
+            commandFeedback = "Could not parse fault key.";
+            commandFailed = true;
+            return;
+        }
+
+        commandBusy = true;
+        try
+        {
+            await Api.ResolveFaultAsync(code, mac, CancellationToken.None);
+            commandFeedback = "Fault resolve requested.";
+            commandFailed = false;
+            await RefreshAsync(silent: false);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            commandFailed = true;
+            commandFeedback = ex.Message;
+        }
+        finally
+        {
+            commandBusy = false;
+        }
+    }
+
+    private static SensorCategory? ParseCategory(string value) =>
+        Enum.TryParse<SensorCategory>(value, out var category) ? category : null;
+
+    private static string OnOff(bool? value) => value is null ? "—" : value.Value ? "ON" : "OFF";
+
+    public async ValueTask DisposeAsync()
+    {
+        if (pollCts is not null)
+        {
+            await pollCts.CancelAsync();
+            pollCts.Dispose();
+        }
+
+        if (pollTask is not null)
+        {
+            try
+            {
+                await pollTask;
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+    }
+}

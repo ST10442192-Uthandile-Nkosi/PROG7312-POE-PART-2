@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using SmartX.Api.Services;
+using SmartX.Shared.Commands;
+using SmartX.Shared.Runtime;
 using SmartX.Shared.Sensors;
 using SmartX.Shared.Telemetry;
 
@@ -23,12 +25,24 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<FormOptions>(o => o.MultipartBodyLengthLimit = 10 * 1024 * 1024);
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<SensorRegistry>();
+builder.Services.AddSingleton<PendingTelemetryQueue>();
+builder.Services.AddSingleton<AlertPriorityInbox>();
+builder.Services.AddSingleton<ThresholdEvaluator>();
+builder.Services.AddSingleton<LiveDeviceStore>();
+builder.Services.AddSingleton<TelemetryHistoryStore>();
+builder.Services.AddSingleton<ActiveFaultSet>();
+builder.Services.AddSingleton<CommandUndoStore>();
+builder.Services.AddSingleton<ProcessingJournal>();
+builder.Services.AddSingleton<TelemetryProcessingEngine>();
 builder.Services.AddSingleton<TelemetryIngestionService>();
+builder.Services.AddSingleton<CommandService>();
+builder.Services.AddSingleton<RecommendationService>();
 builder.Services.AddSingleton<TelemetryBatchProcessor>();
 builder.Services.AddSingleton<DeploymentValidator>();
 builder.Services.AddSingleton<AttachmentStore>();
 builder.Services.AddSingleton<GatewayIntegrityService>();
 builder.Services.AddHostedService<MeshSeedHostedService>();
+builder.Services.AddHostedService<TelemetryProcessingWorker>();
 
 var app = builder.Build();
 
@@ -93,14 +107,15 @@ app.MapPost("/api/sensors/{mac}/upload", async (
 }).DisableAntiforgery();
 
 // Typed ingest: TelemetryPacket<float>, <int>, and <bool> (no boxing).
+// 200 = accepted into IngestionBuffer and the FIFO processing queue. 429 = queue full.
 app.MapPost("/api/telemetry/ingest-float", (TelemetryPacket<float> packet, TelemetryIngestionService telemetry) =>
-    Results.Ok(telemetry.IngestFloat(packet)));
+    TryIngest(() => telemetry.IngestFloat(packet)));
 
 app.MapPost("/api/telemetry/ingest-int", (TelemetryPacket<int> packet, TelemetryIngestionService telemetry) =>
-    Results.Ok(telemetry.IngestInt(packet)));
+    TryIngest(() => telemetry.IngestInt(packet)));
 
 app.MapPost("/api/telemetry/ingest-bool", (TelemetryPacket<bool> packet, TelemetryIngestionService telemetry) =>
-    Results.Ok(telemetry.IngestBool(packet)));
+    TryIngest(() => telemetry.IngestBool(packet)));
 
 app.MapPost("/api/telemetry/ingest", (TelemetryIngestRequest request, TelemetryIngestionService telemetry) =>
 {
@@ -114,7 +129,7 @@ app.MapPost("/api/telemetry/ingest", (TelemetryIngestRequest request, TelemetryI
     {
         "float" or "double" or "moisture" => IngestMoisture(request, telemetry),
         "int" or "power" or "watts" => IngestPower(request, telemetry),
-        "bool" or "actuator" => Results.Ok(telemetry.IngestBool(new TelemetryPacket<bool>
+        "bool" or "actuator" => TryIngest(() => telemetry.IngestBool(new TelemetryPacket<bool>
         {
             DeviceId = request.DeviceId,
             Timestamp = DateTimeOffset.UtcNow,
@@ -162,6 +177,60 @@ app.MapPost("/api/deployment/validate", ([FromBody] SmartX.Shared.Deployment.Val
 app.MapGet("/api/gateway/integrity", (GatewayIntegrityService integrity) =>
     Results.Ok(integrity.Build()));
 
+app.MapGet("/api/runtime/stats", (TelemetryProcessingEngine engine) =>
+    Results.Ok(engine.Stats()));
+
+app.MapGet("/api/runtime/devices", (LiveDeviceStore devices) =>
+    Results.Ok(devices.Snapshot()));
+
+app.MapGet("/api/runtime/devices/{mac}", (string mac, LiveDeviceStore devices) =>
+    devices.TryGet(mac, out var state) ? Results.Ok(state) : Results.NotFound());
+
+app.MapGet("/api/runtime/history", (TelemetryHistoryStore history, [FromQuery] int take = 40, [FromQuery] string? mac = null) =>
+    Results.Ok(history.Latest(take, mac)));
+
+app.MapGet("/api/runtime/faults", (ActiveFaultSet faults) =>
+    Results.Ok(faults.Snapshot()));
+
+app.MapPost("/api/runtime/faults/resolve", (FaultResolveRequest request, ActiveFaultSet faults, LiveDeviceStore devices) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Code) || string.IsNullOrWhiteSpace(request.MacAddress))
+    {
+        return Results.BadRequest(new { Message = "Code and MAC are required." });
+    }
+
+    var removed = faults.Resolve(request.Code, request.MacAddress);
+    if (removed)
+    {
+        var stillAlerting = faults.Snapshot().Any(f =>
+            f.EndsWith(":" + SensorRegistry.NormalizeMac(request.MacAddress), StringComparison.OrdinalIgnoreCase));
+        devices.SetAlertFlag(request.MacAddress, stillAlerting);
+    }
+
+    return Results.Ok(new { Resolved = removed, Active = faults.Snapshot() });
+});
+
+app.MapGet("/api/runtime/journal", (ProcessingJournal journal) =>
+    Results.Ok(journal.Snapshot()));
+
+app.MapGet("/api/runtime/recommendations", (RecommendationService recommendations) =>
+    Results.Ok(recommendations.Evaluate()));
+
+app.MapGet("/api/commands", (CommandService commands) =>
+    Results.Ok(commands.History()));
+
+app.MapPost("/api/commands", (CommandRequest request, CommandService commands) =>
+{
+    var result = commands.Apply(request);
+    return result.Accepted ? Results.Ok(result) : Results.BadRequest(result);
+});
+
+app.MapPost("/api/commands/undo", (CommandService commands) =>
+{
+    var result = commands.Undo();
+    return result.Accepted ? Results.Ok(result) : Results.BadRequest(result);
+});
+
 app.Run();
 
 static IResult IngestMoisture(TelemetryIngestRequest request, TelemetryIngestionService telemetry)
@@ -172,7 +241,7 @@ static IResult IngestMoisture(TelemetryIngestRequest request, TelemetryIngestion
         return Results.BadRequest(new { Message = "Soil moisture must be between 0 and 100 %VWC." });
     }
 
-    return Results.Ok(telemetry.IngestFloat(new TelemetryPacket<float>
+    return TryIngest(() => telemetry.IngestFloat(new TelemetryPacket<float>
     {
         DeviceId = request.DeviceId,
         Timestamp = DateTimeOffset.UtcNow,
@@ -190,7 +259,7 @@ static IResult IngestPower(TelemetryIngestRequest request, TelemetryIngestionSer
         return Results.BadRequest(new { Message = "Power must be between 0 and 20000 W." });
     }
 
-    return Results.Ok(telemetry.IngestInt(new TelemetryPacket<int>
+    return TryIngest(() => telemetry.IngestInt(new TelemetryPacket<int>
     {
         DeviceId = request.DeviceId,
         Timestamp = DateTimeOffset.UtcNow,
@@ -199,3 +268,19 @@ static IResult IngestPower(TelemetryIngestRequest request, TelemetryIngestionSer
         Unit = string.IsNullOrWhiteSpace(request.Unit) ? "W" : request.Unit
     }));
 }
+
+static IResult TryIngest(Func<object> ingest)
+{
+    try
+    {
+        return Results.Ok(ingest());
+    }
+    catch (QueueFullException ex)
+    {
+        return Results.Json(new { ex.Message }, statusCode: StatusCodes.Status429TooManyRequests);
+    }
+}
+
+public sealed record FaultResolveRequest(string Code, string MacAddress);
+
+public partial class Program;

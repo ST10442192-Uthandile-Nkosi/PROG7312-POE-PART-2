@@ -8,7 +8,7 @@
     "net10.0": []
   },
   "packageFolders": {
-    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget": {}
+    "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/e9b390f9e16aea75a3dde858f13c77ee/nuget": {}
   },
   "project": {
     "version": "1.0.0",
@@ -16,7 +16,7 @@
       "projectUniqueName": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj",
       "projectName": "SmartX.Shared",
       "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj",
-      "packagesPath": "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/4f515b205202a76c183fc70b8bbe24e7/nuget",
+      "packagesPath": "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/e9b390f9e16aea75a3dde858f13c77ee/nuget",
       "outputPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [

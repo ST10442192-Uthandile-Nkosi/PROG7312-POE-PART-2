@@ -14,4 +14,8 @@
     <ProjectReference Include="..\SmartX.Shared\SmartX.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="SmartX.Tests" />
+  </ItemGroup>
+
 </Project>

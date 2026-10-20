@@ -321,3 +321,53 @@ code {
         padding-right: 1rem !important;
     }
 }
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.stat-tile {
+    padding: 0.85rem 1rem;
+}
+
+.stat-tile strong {
+    display: block;
+    font-size: 1.25rem;
+}
+
+.stale-banner {
+    background: #fff3cd;
+    border: 1px solid #e6c35c;
+    border-radius: 8px;
+    padding: 0.65rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.row-alert {
+    background: #fff5f5;
+}
+
+.insight-stack {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.insight {
+    border-left: 4px solid #6f42c1;
+    background: #f7f4ff;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+}
+
+.insight.critical {
+    border-left-color: #dc3545;
+    background: #fff5f5;
+}
+
+.insight.warning {
+    border-left-color: #e0a800;
+    background: #fff8e8;
+}
