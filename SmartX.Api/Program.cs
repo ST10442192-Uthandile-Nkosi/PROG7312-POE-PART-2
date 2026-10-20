@@ -32,6 +32,7 @@ builder.Services.AddSingleton<LiveDeviceStore>();
 builder.Services.AddSingleton<TelemetryHistoryStore>();
 builder.Services.AddSingleton<ActiveFaultSet>();
 builder.Services.AddSingleton<CommandUndoStore>();
+builder.Services.AddSingleton<SearchObservationStore>();
 builder.Services.AddSingleton<ProcessingJournal>();
 builder.Services.AddSingleton<TelemetryProcessingEngine>();
 builder.Services.AddSingleton<TelemetryIngestionService>();
@@ -215,6 +216,17 @@ app.MapGet("/api/runtime/journal", (ProcessingJournal journal) =>
 
 app.MapGet("/api/runtime/recommendations", (RecommendationService recommendations) =>
     Results.Ok(recommendations.Evaluate()));
+
+app.MapPost("/api/runtime/search-observations", (SearchObservationRequest request, SearchObservationStore searches) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Term))
+    {
+        return Results.BadRequest(new { Message = "Term is required." });
+    }
+
+    searches.Record(request.Term);
+    return Results.Ok(new { searches.Count });
+});
 
 app.MapGet("/api/commands", (CommandService commands) =>
     Results.Ok(commands.History()));

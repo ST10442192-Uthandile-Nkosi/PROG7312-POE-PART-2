@@ -80,6 +80,12 @@
                         <p class="tiny mb-1">@rec.Evidence</p>
                         <p class="mb-1"><em>Next step:</em> @rec.SuggestedAction</p>
                         <p class="tiny mb-0">Evidence @rec.EvidenceUtc.UtcDateTime.ToString("u") · @rec.EvidenceCount sample(s)</p>
+                        @if (CanExecuteSuggestion(rec))
+                        {
+                            <button class="btn btn-sm btn-outline-danger mt-2" @onclick="() => ExecuteSuggestion(rec)" disabled="@commandBusy">
+                                Execute suggestion
+                            </button>
+                        }
                     </article>
                 }
             </div>
@@ -93,7 +99,7 @@
         <div class="row g-2 align-items-end">
             <div class="col-md-4">
                 <label class="form-label">Name or MAC</label>
-                <input class="form-control" @bind="search" @bind:event="oninput" placeholder="solenoid or 24:6F" />
+                <input class="form-control" @bind="search" @bind:event="oninput" @bind:after="OnSearchChanged" placeholder="solenoid or 24:6F" />
             </div>
             <div class="col-md-2">
                 <label class="form-label">Category</label>
@@ -174,7 +180,16 @@
                                                 <span class="tiny">n/a</span>
                                             }
                                         </td>
-                                        <td>@(device.HasActiveAlert ? "Yes" : "No")</td>
+                                        <td>
+                                            @if (device.HasActiveAlert)
+                                            {
+                                                <strong class="text-danger">⚠ Alerting</strong>
+                                            }
+                                            else
+                                            {
+                                                <span>No</span>
+                                            }
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
@@ -207,6 +222,7 @@
                         <label class="form-check-label" for="cmdOn">Turn ON</label>
                     </div>
                     <button class="btn btn-primary" @onclick="SendCommand" disabled="@commandBusy">Apply command</button>
+                    <button class="btn btn-warning ms-2" @onclick="UndoLast" disabled="@commandBusy">Undo Last Command</button>
                     <p class="mt-2 mb-0 @(commandFailed ? "text-danger" : "status-line")">@commandFeedback</p>
                 }
             </div>
@@ -215,7 +231,7 @@
         <div class="card mesh-card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>Command history</span>
-                <button class="btn btn-sm btn-outline-primary" @onclick="UndoLast" disabled="@commandBusy">Undo last</button>
+                <button class="btn btn-sm btn-warning" @onclick="UndoLast" disabled="@commandBusy">Undo Last Command</button>
             </div>
             <div class="card-body p-0">
                 @if (commands.Count == 0)
@@ -387,6 +403,7 @@
     private string historyMac = "";
     private string historyHours = "0";
     private CancellationTokenSource? pollCts;
+    private CancellationTokenSource? searchCts;
     private bool refreshInFlight;
     private Task? pollTask;
 
@@ -510,6 +527,42 @@
         actuatorFilter = "";
     }
 
+    private async Task OnSearchChanged()
+    {
+        searchCts?.Cancel();
+        searchCts?.Dispose();
+        searchCts = new CancellationTokenSource();
+        var token = searchCts.Token;
+        try
+        {
+            await Task.Delay(400, token);
+            await Api.RecordSearchAsync(search, token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (HttpRequestException)
+        {
+        }
+    }
+
+    private bool CanExecuteSuggestion(RecommendationDto rec) =>
+        rec.RelatedDeviceId is { Length: > 0 } related &&
+        actuators.Any(a => a.MacAddress.Equals(related, StringComparison.OrdinalIgnoreCase));
+
+    private async Task ExecuteSuggestion(RecommendationDto rec)
+    {
+        if (!CanExecuteSuggestion(rec) || rec.RelatedDeviceId is null)
+        {
+            return;
+        }
+
+        selectedActuatorMac = rec.RelatedDeviceId;
+        commandOn = true;
+        commandFeedback = "Filled from suggestion. Sending ON…";
+        await SendCommand();
+    }
+
     private async Task SendCommand()
     {
         if (string.IsNullOrWhiteSpace(selectedActuatorMac) || commandBusy)
@@ -609,6 +662,8 @@
 
     public async ValueTask DisposeAsync()
     {
+        searchCts?.Cancel();
+        searchCts?.Dispose();
         if (pollCts is not null)
         {
             await pollCts.CancelAsync();

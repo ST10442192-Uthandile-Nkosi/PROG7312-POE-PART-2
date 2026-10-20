@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Tests/SmartX.Tests.csproj": {}
+    "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Tests/SmartX.Tests.csproj": {}
   },
   "projects": {
-    "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/SmartX.Api.csproj": {
+    "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/SmartX.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/SmartX.Api.csproj",
+        "projectUniqueName": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/SmartX.Api.csproj",
         "projectName": "SmartX.Api",
-        "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/SmartX.Api.csproj",
+        "projectPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/SmartX.Api.csproj",
         "packagesPath": "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/e9b390f9e16aea75a3dde858f13c77ee/nuget",
-        "outputPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/",
+        "outputPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/Uthandile/.nuget/NuGet/NuGet.Config"
@@ -26,8 +26,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj": {
-                "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj"
+              "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Shared/SmartX.Shared.csproj": {
+                "projectPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Shared/SmartX.Shared.csproj"
               }
             }
           }
@@ -490,14 +490,14 @@
         }
       }
     },
-    "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj": {
+    "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Shared/SmartX.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj",
+        "projectUniqueName": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Shared/SmartX.Shared.csproj",
         "projectName": "SmartX.Shared",
-        "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj",
+        "projectPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Shared/SmartX.Shared.csproj",
         "packagesPath": "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/e9b390f9e16aea75a3dde858f13c77ee/nuget",
-        "outputPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/obj/",
+        "outputPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Shared/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/Uthandile/.nuget/NuGet/NuGet.Config"
@@ -823,14 +823,14 @@
         }
       }
     },
-    "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Tests/SmartX.Tests.csproj": {
+    "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Tests/SmartX.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Tests/SmartX.Tests.csproj",
+        "projectUniqueName": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Tests/SmartX.Tests.csproj",
         "projectName": "SmartX.Tests",
-        "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Tests/SmartX.Tests.csproj",
+        "projectPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Tests/SmartX.Tests.csproj",
         "packagesPath": "/var/folders/lp/ybxwf22s2xq_mngflsm5s2_40000gn/T/cursor-sandbox-cache/e9b390f9e16aea75a3dde858f13c77ee/nuget",
-        "outputPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Tests/obj/",
+        "outputPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/Uthandile/.nuget/NuGet/NuGet.Config"
@@ -845,11 +845,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/SmartX.Api.csproj": {
-                "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/SmartX.Api.csproj"
+              "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/SmartX.Api.csproj": {
+                "projectPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/SmartX.Api.csproj"
               },
-              "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj": {
-                "projectPath": "/Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Shared/SmartX.Shared.csproj"
+              "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Shared/SmartX.Shared.csproj": {
+                "projectPath": "/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Shared/SmartX.Shared.csproj"
               }
             }
           }

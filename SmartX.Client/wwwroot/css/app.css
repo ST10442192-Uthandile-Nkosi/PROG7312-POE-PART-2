@@ -348,6 +348,13 @@ code {
 
 .row-alert {
     background: #fff5f5;
+    box-shadow: inset 3px 0 0 #dc3545;
+    animation: alert-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes alert-pulse {
+    0%, 100% { box-shadow: inset 3px 0 0 #dc3545; }
+    50% { box-shadow: inset 6px 0 0 #ff6b6b; }
 }
 
 .insight-stack {

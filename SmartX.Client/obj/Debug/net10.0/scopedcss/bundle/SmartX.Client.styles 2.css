@@ -1,0 +1,33 @@
+/* /Layout/MainLayout.razor.rz.scp.css */
+.page[b-0iy9ywci50] {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar[b-0iy9ywci50] {
+    display: flex;
+    align-items: center;
+    height: 3.5rem;
+    padding: 0 1.5rem;
+    background: linear-gradient(90deg, #071226 0%, #3a0647 100%);
+}
+
+.top-bar .brand[b-0iy9ywci50] {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.content[b-0iy9ywci50] {
+    flex: 1;
+    padding-top: 1.25rem;
+    padding-bottom: 2rem;
+}
+
+@media (max-width: 640.98px) {
+    .top-bar[b-0iy9ywci50] {
+        padding: 0 1rem;
+    }
+}

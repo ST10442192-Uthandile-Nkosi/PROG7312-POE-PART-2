@@ -164,6 +164,55 @@ public sealed class RecommendationEngineTests
     }
 
     [Fact]
+    public void Search_for_pump_after_vwc_fault_suggests_zone_valve()
+    {
+        var h = SeedBedAndValve();
+        Push(h, TestMacs.Moisture, 12, T0, "%VWC");
+        h.Faults.Raise("VWC-LOW", TestMacs.Moisture);
+        var searches = new SearchObservationStore();
+        searches.Record("Pump", T0.AddMinutes(1));
+
+        var recs = new RecommendationService(h.Devices, h.History, h.Faults, h.Undo, h.Thresholds, searches)
+            .Evaluate(T0.AddMinutes(1));
+
+        Assert.Contains(recs, r =>
+            r.Id == $"search-after-fault:{TestMacs.Moisture}:{TestMacs.Valve}" &&
+            r.Category == "search" &&
+            r.RelatedDeviceId == TestMacs.Valve);
+        Assert.Equal(1, searches.Count);
+    }
+
+    [Fact]
+    public void Unrelated_search_does_not_create_a_search_insight()
+    {
+        var h = SeedBedAndValve();
+        Push(h, TestMacs.Moisture, 12, T0, "%VWC");
+        h.Faults.Raise("VWC-LOW", TestMacs.Moisture);
+        var searches = new SearchObservationStore();
+        searches.Record("weather", T0);
+
+        var recs = new RecommendationService(h.Devices, h.History, h.Faults, h.Undo, h.Thresholds, searches)
+            .Evaluate(T0);
+
+        Assert.DoesNotContain(recs, r => r.Category == "search");
+    }
+
+    [Fact]
+    public void Search_store_drops_oldest_entries_beyond_capacity()
+    {
+        var searches = new SearchObservationStore();
+        for (var i = 0; i < SearchObservationStore.Capacity + 5; i++)
+        {
+            searches.Record($"term{i:00}");
+        }
+
+        Assert.Equal(SearchObservationStore.Capacity, searches.Count);
+        var snap = searches.Snapshot();
+        Assert.Equal("term05", snap[0].Term);
+        Assert.Equal("term36", snap[^1].Term);
+    }
+
+    [Fact]
     public void Three_dry_then_on_commands_produce_a_pattern_insight()
     {
         var h = SeedBedAndValve();

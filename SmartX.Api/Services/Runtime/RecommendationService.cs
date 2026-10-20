@@ -21,6 +21,7 @@ public sealed class RecommendationService
     private readonly ActiveFaultSet _faults;
     private readonly CommandUndoStore _commands;
     private readonly ThresholdEvaluator _thresholds;
+    private readonly SearchObservationStore? _searches;
     private readonly TimeProvider _clock;
 
     public RecommendationService(
@@ -29,6 +30,7 @@ public sealed class RecommendationService
         ActiveFaultSet faults,
         CommandUndoStore commands,
         ThresholdEvaluator thresholds,
+        SearchObservationStore? searches = null,
         TimeProvider? clock = null)
     {
         _devices = devices;
@@ -36,6 +38,7 @@ public sealed class RecommendationService
         _faults = faults;
         _commands = commands;
         _thresholds = thresholds;
+        _searches = searches;
         _clock = clock ?? TimeProvider.System;
     }
 
@@ -66,6 +69,11 @@ public sealed class RecommendationService
         }
 
         foreach (var rec in PatternInsights(devices, history, commands, nowUtc))
+        {
+            byId[rec.Id] = rec;
+        }
+
+        foreach (var rec in SearchInsights(devices, nowUtc))
         {
             byId[rec.Id] = rec;
         }
@@ -294,6 +302,94 @@ public sealed class RecommendationService
                 EvidenceCount = hits
             };
         }
+    }
+
+    private IEnumerable<RecommendationDto> SearchInsights(
+        IReadOnlyList<LiveDeviceState> devices,
+        DateTimeOffset now)
+    {
+        if (_searches is null)
+        {
+            yield break;
+        }
+
+        var searches = _searches.Snapshot();
+        if (searches.Count == 0)
+        {
+            yield break;
+        }
+
+        var latest = searches[^1];
+        foreach (var faultKey in _faults.Snapshot())
+        {
+            if (!faultKey.StartsWith("VWC-LOW:", StringComparison.OrdinalIgnoreCase) &&
+                !faultKey.StartsWith("IRR-DEADLOCK:", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (!DeviceDashboardFilter.TrySplitFaultKey(faultKey, out var code, out var bedMac))
+            {
+                continue;
+            }
+
+            var bed = devices.FirstOrDefault(d =>
+                d.MacAddress.Equals(bedMac, StringComparison.OrdinalIgnoreCase));
+            if (bed is null)
+            {
+                continue;
+            }
+
+            var valve = devices.FirstOrDefault(v =>
+                v.Category == SensorCategory.Actuator &&
+                ThresholdEvaluator.SharesDeploymentZone(bed.Location, v.Location));
+            if (valve is null)
+            {
+                continue;
+            }
+
+            if (!SearchLooksLikeIrrigation(latest.Term, bed, valve))
+            {
+                continue;
+            }
+
+            yield return new RecommendationDto
+            {
+                Id = $"search-after-fault:{bed.MacAddress}:{valve.MacAddress}",
+                Category = "search",
+                Severity = "warning",
+                DeviceId = bed.MacAddress,
+                RelatedDeviceId = valve.MacAddress,
+                Title = $"Search “{latest.Term}” after {code} on {bed.DisplayName}",
+                Explanation = "Operator search history on this gateway, combined with an active moisture/irrigation fault.",
+                SuggestedAction = $"If you agree, use Execute Suggestion or the command panel to turn {valve.DisplayName} ON. This insight does not send the command by itself.",
+                Evidence = $"Latest search “{latest.Term}” at {latest.AtUtc:u}; active fault {faultKey}.",
+                EvidenceUtc = latest.AtUtc,
+                EvidenceCount = searches.Count
+            };
+        }
+    }
+
+    private static bool SearchLooksLikeIrrigation(string term, LiveDeviceState bed, LiveDeviceState valve)
+    {
+        if (term.Contains(bed.DisplayName, StringComparison.OrdinalIgnoreCase) ||
+            term.Contains(bed.MacAddress, StringComparison.OrdinalIgnoreCase) ||
+            term.Contains(valve.DisplayName, StringComparison.OrdinalIgnoreCase) ||
+            term.Contains(valve.MacAddress, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        ReadOnlySpan<string> keywords = ["pump", "valve", "solenoid", "irrigat", "relay", "moisture", "vwc", "gutter", "dry"];
+        foreach (var keyword in keywords)
+        {
+            if (term.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static RecommendationDto Trend(

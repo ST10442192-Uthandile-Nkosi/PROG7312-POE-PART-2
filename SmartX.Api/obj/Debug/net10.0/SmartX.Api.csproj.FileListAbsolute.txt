@@ -68,3 +68,39 @@ C:/Users/emeris/source/repos/PROG7312 POE PART 1/PROG7321-POE-PART-1/SmartX/Smar
 /Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.pdb
 /Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/SmartX.Api.genruntimeconfig.cache
 /Users/Uthandile/Library/CloudStorage/OneDrive-ADvTECHLtd/SmartX/SmartX.Api/obj/Debug/net10.0/ref/SmartX.Api.dll
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/appsettings.Development.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/appsettings.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/SmartX.Api.staticwebassets.endpoints.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/SmartX.Api
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/SmartX.Api.deps.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/SmartX.Api.runtimeconfig.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/SmartX.Api.dll
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/SmartX.Api.pdb
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/Microsoft.AspNetCore.OpenApi.dll
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/Microsoft.OpenApi.dll
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/SmartX.Shared.dll
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/bin/Debug/net10.0/SmartX.Shared.pdb
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.AssemblyReference.cache
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/rpswa.dswa.cache.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.AssemblyInfoInputs.cache
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.AssemblyInfo.cs
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.CoreCompileInputs.cache
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.MvcApplicationPartsAssemblyInfo.cs
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.MvcApplicationPartsAssemblyInfo.cache
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.sourcelink.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/rjimswa.dswa.cache.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/scopedcss/bundle/SmartX.Api.styles.css
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.json.cache
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/staticwebassets.development.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/staticwebassets.build.endpoints.json
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/swae.build.ex.cache
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.csproj.Up2Date
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.dll
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/refint/SmartX.Api.dll
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.pdb
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/SmartX.Api.genruntimeconfig.cache
+/Users/Uthandile/Documents/PROG7312 Poe/PROG7312-POE-PART-2/SmartX.Api/obj/Debug/net10.0/ref/SmartX.Api.dll

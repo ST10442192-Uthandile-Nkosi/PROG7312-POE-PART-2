@@ -64,6 +64,20 @@ public sealed class CommandStreamClient
     public Task<CommandResult> UndoAsync(CancellationToken cancellationToken) =>
         PostCommandAsync("/api/commands/undo", null, cancellationToken);
 
+    public async Task RecordSearchAsync(string term, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(term) || term.Trim().Length < 2)
+        {
+            return;
+        }
+
+        using var response = await _http.PostAsJsonAsync(
+            "/api/runtime/search-observations",
+            new SearchObservationRequest { Term = term },
+            cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
     public async Task ResolveFaultAsync(string code, string mac, CancellationToken cancellationToken)
     {
         var response = await _http.PostAsJsonAsync(
